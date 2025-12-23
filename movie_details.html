@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <button onclick="goBack()">⬅ Back</button>
+   <h1 id="movieTitle"></h1>
+</header>
+
+<main class="details-container">
+
+  <button onclick="openReviewModal()">➕ Add Review</button><br><br>
+
+  <div id="reviewModal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Add Review</h3>
+
+    <textarea id="reviewText" placeholder="Write review"></textarea>
+
+    <select id="rating">
+      <option value="1">⭐ 1</option>
+      <option value="2">⭐ 2</option>
+      <option value="3">⭐ 3</option>
+      <option value="4">⭐ 4</option>
+      <option value="5">⭐ 5</option>
+    </select><br><br>
+
+    <div class="modal-actions">
+      <button onclick="submitReview()">Submit</button>
+      <button onclick="closeReviewModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+    <!-- View Reviews -->
+    <section class="reviews" id="reviewsList">
+
+        <h2>Reviews</h2>
+
+    </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -22,7 +22,7 @@ function addMovie() {
   const name = document.getElementById("movieName").value;
   const genre = document.getElementById("movieGenre").value;
 
-  fetch("https://cooperative-compassion-production.up.railway.app:8080/movies", {
+  fetch("https://cooperative-compassion-production.up.railway.app/movies", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -73,7 +73,7 @@ function submitReview() {
   const text = document.getElementById("reviewText").value;
   const rating = document.getElementById("rating").value;
 
-  fetch(`https://cooperative-compassion-production.up.railway.app:8080/movies/${movieId}/reviews`, {
+  fetch(`https://cooperative-compassion-production.up.railway.app/movies/${movieId}/reviews`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -92,7 +92,7 @@ function loadReviews() {
   const list = document.getElementById("reviewsList");
   if (!list) return;
 
-  fetch(`https://cooperative-compassion-production.up.railway.app:8080/movies/${movieId}/reviews`)
+  fetch(`https://cooperative-compassion-production.up.railway.app/movies/${movieId}/reviews`)
     .then(res => res.json())
     .then(data => {
       list.innerHTML = "<h2>Reviews</h2>";
@@ -118,7 +118,7 @@ window.onload = () => {
   const grid = document.querySelector(".movie-grid");
   if (!grid) return;   
 
-  fetch("https://cooperative-compassion-production.up.railway.app:8080/movies")
+  fetch("https://cooperative-compassion-production.up.railway.app/movies")
     .then(res => res.json())
     .then(data => {
       grid.innerHTML = "";
@@ -126,7 +126,7 @@ window.onload = () => {
       data.forEach(movie => {
         const card = document.createElement("div");
         card.className = "movie-card";
-        fetch(`https://cooperative-compassion-production.up.railway.app:8080/movies/${movie.id}/stats`)
+        fetch(`https://cooperative-compassion-production.up.railway.app/movies/${movie.id}/stats`)
   .then(res => res.json())
   .then(stats => {
     card.innerHTML = `

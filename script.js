@@ -19,8 +19,14 @@ function goBack() {
 
 
 function addMovie() {
-  const name = document.getElementById("movieName").value;
-  const genre = document.getElementById("movieGenre").value;
+  const name = document.getElementById("movieName").value.trim();
+  const genre = document.getElementById("movieGenre").value.trim();
+
+  if (!name || !genre) {
+        alert("Please fill all fields");
+        return;
+    }
+
 
   fetch("https://cooperative-compassion-production.up.railway.app/movies", {
     method: "POST",

@@ -16,17 +16,9 @@ function goBack() {
   window.location.href = "index.html";
 }
 
+let jwtToken = null;
 
-
-function addMovie() {
-  const name = document.getElementById("movieName").value.trim();
-  const genre = document.getElementById("movieGenre").value.trim();
-
-  if (!name || !genre) {
-    alert("Please fill all fields");
-    return;
-  }
-
+function adminLogin() {
   const username = prompt("Enter admin username:");
   const password = prompt("Enter admin password:");
 
@@ -35,14 +27,49 @@ function addMovie() {
     return;
   }
 
-  const authHeader = "Basic " + btoa(username + ":" + password);
+  fetch("https://cooperative-compassion-production.up.railway.app/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password
+    })
+  })
+    .then(res => {
+      if (res.status === 401) {
+        alert("Login failed invalid credencials..!!!")
+        throw new Error("Login failed");
+      }
+      return res.json();
+    })
+    .then(data => {
+      jwtToken = data.token;
+      addMovie1();
+    })
+}
+
+function addMovie() {
+
+  adminLogin();
+}
+
+function addMovie1() {
+  const name = document.getElementById("movieName").value.trim();
+  const genre = document.getElementById("movieGenre").value.trim();
+
+  if (!name || !genre) {
+    alert("Please fill all fields");
+    return;
+  }
 
 
   fetch("https://cooperative-compassion-production.up.railway.app/movies", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": authHeader
+      "Authorization": "Bearer " + jwtToken
     },
     body: JSON.stringify({
       movieName: name,
@@ -51,10 +78,8 @@ function addMovie() {
   })
     .then(res => {
       if (res.status === 401) {
-        throw new Error("Login failed");
-      }
-      if (!res.ok) {
-        throw new Error("Error adding movie");
+        alert("unauthorized");
+        return;
       }
       return res.json();
     })

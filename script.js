@@ -76,8 +76,12 @@ function closeReviewModal() {
 
 
 function submitReview() {
-  const text = document.getElementById("reviewText").value;
-  const rating = document.getElementById("rating").value;
+  const text = document.getElementById("reviewText").value.trim();
+  const rating = document.getElementById("rating").value.trim();
+  if(!text){
+    alert ("Enter your review");
+    return;
+  }
 
   fetch(`https://cooperative-compassion-production.up.railway.app/movies/${movieId}/reviews`, {
     method: "POST",

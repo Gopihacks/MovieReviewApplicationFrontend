@@ -49,11 +49,16 @@ function adminLogin() {
       addMovie1();
     })
 }
-
 function addMovie() {
-
-  adminLogin();
+  if (jwtToken === null) {
+    // not logged in yet
+    adminLogin();
+  } else {
+    // already logged in
+    addMovie1();
+  }
 }
+
 
 function addMovie1() {
   const name = document.getElementById("movieName").value.trim();

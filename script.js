@@ -13,7 +13,7 @@ function openMovie(id, name) {
 
 
 function goBack() {
-    window.location.href = "index.html";
+  window.location.href = "index.html";
 }
 
 
@@ -23,29 +23,50 @@ function addMovie() {
   const genre = document.getElementById("movieGenre").value.trim();
 
   if (!name || !genre) {
-        alert("Please fill all fields");
-        return;
-    }
+    alert("Please fill all fields");
+    return;
+  }
+
+  const username = prompt("Enter admin username:");
+  const password = prompt("Enter admin password:");
+
+  if (!username || !password) {
+    alert("Login cancelled");
+    return;
+  }
+
+  const authHeader = "Basic " + btoa(username + ":" + password);
 
 
   fetch("https://cooperative-compassion-production.up.railway.app/movies", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": authHeader
+    },
     body: JSON.stringify({
       movieName: name,
       genre: genre
     })
   })
-  .then(res => res.json())
-  .then(movie => {
-    const card = document.createElement("div");
-    card.className = "movie-card";
-    card.innerHTML = `<h3>${movie.movieName}</h3><p>${movie.genre}</p>`;
-    card.onclick = () => openMovie(movie.id, movie.movieName);
+    .then(res => {
+      if (res.status === 401) {
+        throw new Error("Login failed");
+      }
+      if (!res.ok) {
+        throw new Error("Error adding movie");
+      }
+      return res.json();
+    })
+    .then(movie => {
+      const card = document.createElement("div");
+      card.className = "movie-card";
+      card.innerHTML = `<h3>${movie.movieName}</h3><p>${movie.genre}</p>`;
+      card.onclick = () => openMovie(movie.id, movie.movieName);
 
-    document.querySelector(".movie-grid").appendChild(card);
-    closeModal();
-  });
+      document.querySelector(".movie-grid").appendChild(card);
+      closeModal();
+    });
 }
 
 
@@ -78,8 +99,8 @@ function closeReviewModal() {
 function submitReview() {
   const text = document.getElementById("reviewText").value.trim();
   const rating = document.getElementById("rating").value.trim();
-  if(!text){
-    alert ("Enter your review");
+  if (!text) {
+    alert("Enter your review");
     return;
   }
 
@@ -91,11 +112,11 @@ function submitReview() {
       rating: rating
     })
   })
-  .then(res => res.json())
-  .then(() => {
-    closeReviewModal();
-    loadReviews();   // reload from DB
-  });
+    .then(res => res.json())
+    .then(() => {
+      closeReviewModal();
+      loadReviews();   // reload from DB
+    });
 }
 
 function loadReviews() {
@@ -126,7 +147,7 @@ if (movieId) {
 
 window.onload = () => {
   const grid = document.querySelector(".movie-grid");
-  if (!grid) return;   
+  if (!grid) return;
 
   fetch("https://cooperative-compassion-production.up.railway.app/movies")
     .then(res => res.json())
@@ -137,14 +158,14 @@ window.onload = () => {
         const card = document.createElement("div");
         card.className = "movie-card";
         fetch(`https://cooperative-compassion-production.up.railway.app/movies/${movie.id}/stats`)
-  .then(res => res.json())
-  .then(stats => {
-    card.innerHTML = `
+          .then(res => res.json())
+          .then(stats => {
+            card.innerHTML = `
       <h3>${movie.movieName}</h3>
       <p>${movie.genre}</p>
       <small>⭐ ${stats.averageRating.toFixed(1)} (${stats.reviewCount} reviews)</small>
     `;
-  });
+          });
 
         card.onclick = () => openMovie(movie.id, movie.movieName);
         grid.appendChild(card);

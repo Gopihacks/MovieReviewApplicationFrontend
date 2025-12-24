@@ -46,7 +46,7 @@ function adminLogin() {
     })
     .then(data => {
       jwtToken = data.token;
-      addMovie1();
+     openModal();
     })
 }
 function addMovie() {
@@ -55,14 +55,12 @@ function addMovie() {
     adminLogin();
   } else {
     // already logged in
-     
-    addMovie1();
+   openModal();
   }
 }
 
 
 function addMovie1() {
-  openModal() ;
   const name = document.getElementById("movieName").value.trim();
   const genre = document.getElementById("movieGenre").value.trim();
 
